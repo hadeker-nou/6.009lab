@@ -2,9 +2,11 @@
 
 
 def backwards(sound):
-    raise NotImplementedError
-
-
+    result={}
+    result["rate"]=sound['rate']
+    result["left"]=[sample for sample in reversed(sound['left'])]
+    result["right"]=[sample for sample in reversed(sound['right'])]
+    return result
 def mix(sound1, sound2, p):
     raise NotImplementedError
 
@@ -85,6 +87,11 @@ if __name__ == '__main__':
     # here is an example of loading a file (note that this is specified as
     # sounds/hello.wav, rather than just as hello.wav, to account for the
     # sound files being in a different directory than this file)
-    hello = load_wav('sounds/hello.wav')
+    #hello = load_wav('sounds/hello.wav')
 
     # write_wav(backwards(hello), 'hello_reversed.wav')
+
+
+    mystery = load_wav("sounds/mystery.wav")
+    mystery_rev=backwards(mystery)
+    write_wav( mystery_rev , "result_outputs/mystery_rev.wav")

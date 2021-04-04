@@ -7,20 +7,50 @@ def backwards(sound):
     result["left"]=[sample for sample in reversed(sound['left'])]
     result["right"]=[sample for sample in reversed(sound['right'])]
     return result
+    
+
 def mix(sound1, sound2, p):
-    raise NotImplementedError
+    result={"left":[],"right":[]}
+    if(sound1["rate"]!=sound2["rate"]):
+        return None
+    result["rate"]=sound1["rate"]
+    if(len(sound1["left"])<=len(sound2["left"])):
+        leng=len(sound1["left"])
+    else:
+        leng=len(sound2["left"])
+    for i in range(leng):
+        new=(sound1["left"][i]*p)+(sound2["left"][i]*(1-p))
+        result["left"].append(new)
+        new=(sound1["right"][i]*p)+(sound2["right"][i]*(1-p))
+        result["right"].append(new)
+    return result
 
 
 def echo(sound, num_echos, delay, scale):
-    raise NotImplementedError
+    result={"left":[],"right":[]}
+    result["rate"]=sound['rate']
+    sample_delay=round(sound["rate"]*delay) 
+        
 
 
 def pan(sound):
-    raise NotImplementedError
+    result={"right":[],"left":[],"rate":sound["rate"]}
+    length=len(sound["right"])
+    for i in range(length):
+        newR=(i/(length-1))
+        result["right"].append(newR*sound["right"][i])
+        newL=1-newR
+        result["left"].append(newL*sound["left"][i])
+    return result
 
 
 def remove_vocals(sound):
-    raise NotImplementedError
+    result={"right":[],"left":[],"rate":sound["rate"]}
+    for i in range(len(sound["right"])):
+        new=sound["left"][i]-sound["right"][i]
+        result["left"].append(new)
+        result["right"].append(new)
+    return result
 
 
 # below are helper functions for converting back-and-forth between WAV files
@@ -92,6 +122,7 @@ if __name__ == '__main__':
     # write_wav(backwards(hello), 'hello_reversed.wav')
 
 
-    mystery = load_wav("sounds/mystery.wav")
-    mystery_rev=backwards(mystery)
-    write_wav( mystery_rev , "result_outputs/mystery_rev.wav")
+    cof = load_wav("sounds/coffee.wav")
+    res=remove_vocals(cof)
+    write_wav( res , "result_outputs/cof_remove.wav")
+    

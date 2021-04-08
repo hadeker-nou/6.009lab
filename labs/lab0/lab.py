@@ -30,6 +30,15 @@ def echo(sound, num_echos, delay, scale):
     result={"left":[],"right":[]}
     result["rate"]=sound['rate']
     sample_delay=round(sound["rate"]*delay) 
+    output_long=num_echos * sample_delay + len(sound['left'])
+    result["left"]=[0]*output_long
+    result["right"]=[0]*output_long
+    for i in range(num_echos+1):
+        for j in range(len(sound["right"])):
+            result["right"][j+ (int(sample_delay) * i)] += (sound["right"][j]*(scale**i))
+            result["left"][j+ (int(sample_delay) * i)] += (sound["left"][j]*(scale**i))
+    return result
+
         
 
 
